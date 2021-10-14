@@ -31,7 +31,7 @@ function createPlayer(player, obj) {
 
   const $life = document.createElement("div");
   $life.classList.add("life");
-  $life.style.width = "100%";
+  $life.style.width = obj.hp + "%";
 
   const $name = document.createElement("div");
   $name.classList.add("name");
