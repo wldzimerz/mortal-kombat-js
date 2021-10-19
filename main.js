@@ -70,7 +70,6 @@ function hitPlayer(player) {
 
   if (player.hp <= 0) {
     playerLife.style.width = 0 + "%";
-    arenas.appendChild(playerWin(player.name));
     button.disabled = true;
   } else {
     playerLife.style.width = `${player.hp}%`;
@@ -91,4 +90,10 @@ function playerWin(name) {
 button.addEventListener("click", () => {
   hitPlayer(player1);
   hitPlayer(player2);
+
+  if (player2.hp <= 0) {
+    arenas.appendChild(playerWin(player2.name));
+  } else if (player1.hp <= 0) {
+    arenas.appendChild(playerWin(player1.name));
+  }
 });
