@@ -10,6 +10,9 @@ const player1 = {
   attack: function () {
     console.log(this.name + " - Fight...");
   },
+  changeHP: changeHP,
+  elHp: elHp,
+  renderHP: renderHP,
 };
 
 const player2 = {
@@ -21,6 +24,9 @@ const player2 = {
   attack: function () {
     console.log(this.name + " - Fight...");
   },
+  changeHP: changeHP,
+  elHp: elHp,
+  renderHP: renderHP,
 };
 
 function createNewElement(className, tag = "div") {
@@ -51,7 +57,7 @@ function createPlayer(obj) {
 
   player.appendChild(character);
 
-  const img = document.createElement("img");
+  const img = createNewElement(null, "img");
   img.src = obj.img;
 
   character.appendChild(img);
@@ -62,38 +68,65 @@ function createPlayer(obj) {
 arenas.appendChild(createPlayer(player1));
 arenas.appendChild(createPlayer(player2));
 
-function hitPlayer(player) {
-  const randomHp = Math.ceil(Math.random() * 20);
-
-  const playerLife = document.querySelector(`.player${player.player} .life`);
-  player.hp -= randomHp;
-
-  if (player.hp <= 0) {
-    playerLife.style.width = 0 + "%";
-    button.disabled = true;
-  } else {
-    playerLife.style.width = `${player.hp}%`;
-  }
-}
-
-function playerWin(name) {
+function showBattleResult(name) {
   const winTitle = createNewElement("winTitle");
-  if (name === player2.name) {
-    winTitle.innerText = player1.name + " wins";
+  if (name) {
+    winTitle.innerText = name + " wins";
   } else {
-    winTitle.innerText = player2.name + " wins";
+    winTitle.innerText = "draw";
   }
 
   return winTitle;
 }
 
-button.addEventListener("click", () => {
-  hitPlayer(player1);
-  hitPlayer(player2);
+function createReloadButton() {
+  const reloadDiv = createNewElement("reloadWrap");
+  const restartButton = createNewElement("button", "button");
 
-  if (player2.hp <= 0) {
-    arenas.appendChild(playerWin(player2.name));
-  } else if (player1.hp <= 0) {
-    arenas.appendChild(playerWin(player1.name));
+  restartButton.innerText = "restart";
+  reloadDiv.appendChild(restartButton);
+  restartButton.addEventListener("click", function () {
+    window.location.reload();
+  });
+
+  arenas.append(reloadDiv);
+}
+
+function getRandom(num = 20) {
+  return Math.ceil(Math.random() * num);
+}
+
+function changeHP(num) {
+  this.hp -= num;
+  if (this.hp <= 0) {
+    this.hp = 0;
+  }
+}
+
+function elHp() {
+  return document.querySelector(`.player${this.player} .life`);
+}
+
+function renderHP() {
+  return (this.elHp().style.width = `${this.hp}%`);
+}
+
+button.addEventListener("click", function () {
+  player1.changeHP(getRandom());
+  player2.changeHP(getRandom());
+  player1.renderHP();
+  player2.renderHP();
+
+  if (player1.hp === 0 || player2.hp === 0) {
+    button.disabled = true;
+    createReloadButton();
+  }
+
+  if (player1.hp === 0 && player2.hp > player1.hp) {
+    arenas.appendChild(showBattleResult(player2.name));
+  } else if (player2.hp === 0 && player2.hp < player1.hp) {
+    arenas.appendChild(showBattleResult(player1.name));
+  } else if (player1.hp === 0 && player2.hp === 0) {
+    arenas.appendChild(showBattleResult());
   }
 });
