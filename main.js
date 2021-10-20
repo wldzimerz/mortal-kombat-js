@@ -10,18 +10,9 @@ const player1 = {
   attack: function () {
     console.log(this.name + " - Fight...");
   },
-  changeHP(num) {
-    this.hp -= num;
-    if (this.hp <= 0) {
-      this.hp = 0;
-    }
-  },
-  elHp() {
-    return document.querySelector(`.player${this.player} .life`);
-  },
-  renderHP() {
-    return (this.elHp().style.width = `${this.hp}%`);
-  },
+  changeHP: changeHP,
+  elHp: elHp,
+  renderHP: renderHP,
 };
 
 const player2 = {
@@ -33,18 +24,9 @@ const player2 = {
   attack: function () {
     console.log(this.name + " - Fight...");
   },
-  changeHP(num) {
-    this.hp -= num;
-    if (this.hp <= 0) {
-      this.hp = 0;
-    }
-  },
-  elHp() {
-    return document.querySelector(`.player${this.player} .life`);
-  },
-  renderHP() {
-    return (this.elHp().style.width = `${this.hp}%`);
-  },
+  changeHP: changeHP,
+  elHp: elHp,
+  renderHP: renderHP,
 };
 
 function createNewElement(className, tag = "div") {
@@ -112,6 +94,21 @@ function createReloadButton() {
 
 function getRandom(num = 20) {
   return Math.ceil(Math.random() * num);
+}
+
+function changeHP(num) {
+  this.hp -= num;
+  if (this.hp <= 0) {
+    this.hp = 0;
+  }
+}
+
+function elHp() {
+  return document.querySelector(`.player${this.player} .life`);
+}
+
+function renderHP() {
+  return (this.elHp().style.width = `${this.hp}%`);
 }
 
 button.addEventListener("click", function () {
