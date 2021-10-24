@@ -188,8 +188,16 @@ function createPlayerAttack() {
   return attack;
 }
 
+function normalizeDate() {
+  const date = new Date();
+
+  const normalize = (num) => (num.toString().length > 1 ? num : `0${num}`);
+
+  return (time = `${normalize(date.getHours())}:${normalize(date.getMinutes())}`);
+}
+
 function generateLogs(type, player1, player2, attackValue) {
-  const time = `${new Date().getHours()}:${new Date().getMinutes()}`;
+  const time = normalizeDate();
   let logText = " ";
 
   switch (type) {
