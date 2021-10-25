@@ -230,20 +230,21 @@ generateLogs("start", player1, player2);
 formFight.addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const enemyAttack = createEnemyAttack();
-  const playerAttack = createPlayerAttack();
+  // Пример деструктуризации
+  const { enemyValue, enemyHit, enemyDefence } = createEnemyAttack();
+  const { playerValue, playerHit, playerDefence } = createPlayerAttack();
 
-  if (playerAttack.hit !== enemyAttack.defence) {
-    player2.changeHP(playerAttack.value);
+  if (playerHit !== enemyDefence) {
+    player2.changeHP(playerValue);
     player2.renderHP();
-    generateLogs("hit", player1, player2, playerAttack.value);
+    generateLogs("hit", player1, player2, playerValue);
   } else {
     generateLogs("defence", player1, player2);
   }
-  if (enemyAttack.hit !== playerAttack.defence) {
-    player1.changeHP(enemyAttack.value);
+  if (enemyHit !== playerDefence) {
+    player1.changeHP(enemyValue);
     player1.renderHP();
-    generateLogs("hit", player2, player1, enemyAttack.value);
+    generateLogs("hit", player2, player1, enemyValue);
   } else {
     generateLogs("defence", player2, player1);
   }
