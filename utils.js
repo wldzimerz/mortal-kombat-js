@@ -90,6 +90,7 @@ export function createPlayer(obj) {
 }
 
 export function createEnemyAttack() {
+<<<<<<< HEAD
   const enemyHit = ATTACK[getRandom(ATTACK.length) - 1];
   const enemyDefence = ATTACK[getRandom(ATTACK.length) - 1];
 
@@ -97,6 +98,15 @@ export function createEnemyAttack() {
     enemyValue: getRandom(HIT[enemyHit]),
     enemyHit,
     enemyDefence,
+=======
+  const hit = ATTACK[getRandom(ATTACK.length) - 1];
+  const defence = ATTACK[getRandom(ATTACK.length) - 1];
+
+  return {
+    value: getRandom(HIT[hit]),
+    hit,
+    defence,
+>>>>>>> b2d28a8 (refactor: main.js rework to js module, prepare for destructurization)
   };
 }
 
@@ -105,12 +115,21 @@ export function createPlayerAttack() {
 
   for (let item of formFight) {
     if (item.checked && item.name === "hit") {
+<<<<<<< HEAD
       attack.playerValue = getRandom(HIT[item.value]);
       attack.playerHit = item.value;
     }
 
     if (item.checked && item.name === "defence") {
       attack.playerDefence = item.value;
+=======
+      attack.value = getRandom(HIT[item.value]);
+      attack.hit = item.value;
+    }
+
+    if (item.checked && item.name === "defence") {
+      attack.defence = item.value;
+>>>>>>> b2d28a8 (refactor: main.js rework to js module, prepare for destructurization)
     }
 
     item.checked = false;
