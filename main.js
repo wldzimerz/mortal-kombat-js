@@ -1,10 +1,10 @@
-import { Game, formFight } from "./Game.js";
+import { Game, formFight } from "./game.js";
 
 const game = new Game();
 
 game.start();
 
-formFight.addEventListener("submit", (e) => {
+formFight.addEventListener("submit", async (e) => {
   e.preventDefault();
   game.hit();
 });

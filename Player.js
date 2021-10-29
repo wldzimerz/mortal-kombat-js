@@ -38,3 +38,5 @@ export const player2 = new Player({
   img: "http://reactmarathon-api.herokuapp.com/assets/scorpion.gif",
   weapon: ["kunai", "hatchet"],
 });
+
+export default Player;
