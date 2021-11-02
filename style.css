@@ -21,6 +21,7 @@ html {
 }
 
 body {
+  overflow: hidden;
   background-color: #424542;
   margin: 0;
   padding: 0;

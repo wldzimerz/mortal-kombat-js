@@ -138,10 +138,8 @@ export class Game {
     }
   }
 
-  postPlayersAttack = async (player) => {
-    const { hit, defence } = player;
-
-    const body = fetch("http://reactmarathon-api.herokuapp.com/api/mk/player/fight", {
+  postPlayersAttack = async ({ hit, defence }) => {
+    const body = await fetch("https://reactmarathon-api.herokuapp.com/api/mk/player/fight", {
       method: "POST",
       body: JSON.stringify({
         hit,
