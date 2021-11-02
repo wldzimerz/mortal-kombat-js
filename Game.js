@@ -62,7 +62,7 @@ export class Game {
 
   start = async () => {
     const p1 = JSON.parse(localStorage.getItem("player1"));
-    const p2 = await this.getPlayer();
+    const p2 = JSON.parse(localStorage.getItem("enemy"));
 
     player1 = new Player({
       ...p1,
@@ -221,7 +221,7 @@ export class Game {
     restartButton.innerText = "restart";
     reloadDiv.appendChild(restartButton);
     restartButton.addEventListener("click", function () {
-      window.location.pathname = "/";
+      window.location.pathname = "index.html";
     });
 
     return reloadDiv;

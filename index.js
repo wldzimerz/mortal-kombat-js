@@ -1,20 +1,22 @@
-const $parent = document.querySelector(".parent");
-const $player = document.querySelector(".player");
-const audio = document.querySelector("audio");
+const parent = document.querySelector(".parent");
+const player = document.querySelector(".player");
+const enemy = document.querySelector(".enemy");
+const audioFx = document.querySelector(".fxSound");
+const audioBg = document.querySelector(".bgSound");
 
 const createElement = (tag, className) => {
-  const $tag = document.createElement(tag);
+  const elem = document.createElement(tag);
   if (className) {
     if (Array.isArray(className)) {
       className.forEach((item) => {
-        $tag.classList.add(item);
+        elem.classList.add(item);
       });
     } else {
-      $tag.classList.add(className);
+      elem.classList.add(className);
     }
   }
 
-  return $tag;
+  return elem;
 };
 
 function createEmptyPlayerBlock() {
@@ -22,7 +24,7 @@ function createEmptyPlayerBlock() {
   const img = createElement("img");
   img.src = "http://reactmarathon-api.herokuapp.com/assets/mk/avatar/11.png";
   el.appendChild(img);
-  $parent.appendChild(el);
+  parent.appendChild(el);
 }
 
 async function init() {
@@ -30,6 +32,7 @@ async function init() {
 
   const players = await fetch("https://reactmarathon-api.herokuapp.com/api/mk/players").then((res) => res.json());
 
+  let flag = true;
   let imgSrc = null;
   createEmptyPlayerBlock();
 
@@ -37,42 +40,88 @@ async function init() {
     const el = createElement("div", ["character", `div${item.id}`]);
     const img = createElement("img");
 
-    el.addEventListener("mousemove", () => {
-      if (imgSrc === null) {
+    function handleMouseMove() {
+      if (flag && imgSrc === null) {
         imgSrc = item.img;
-        const $img = createElement("img");
-        $img.src = imgSrc;
-        $player.appendChild($img);
+        const img = createElement("img");
+        img.src = imgSrc;
+        player.appendChild(img);
+        audioFx.src = "./assets/sound/MouseOver.mp3";
       }
-    });
+    }
 
-    el.addEventListener("mouseout", () => {
-      if (imgSrc) {
+    function handleMouseOut() {
+      if (flag && imgSrc) {
         imgSrc = null;
-        $player.innerHTML = "";
+        player.innerHTML = "";
       }
-    });
+    }
+
+    if (flag) {
+      el.addEventListener("mousemove", handleMouseMove);
+      el.addEventListener("mouseout", handleMouseOut);
+    }
 
     el.addEventListener("click", () => {
-      //TODO: Мы кладем нашего игрока в localStorage что бы потом на арене его достать.
-      // При помощи localStorage.getItem('player1'); т.к. в localStorage кладется строка,
-      // то мы должны ее распарсить обратным методом JSON.parse(localStorage.getItem('player1'));
-      // но это уже будет в нашем классе Game когда мы инициализируем игроков.
-      localStorage.setItem("player1", JSON.stringify(item));
+      if (flag) {
+        flag = false;
+        el.removeEventListener("mousemove", handleMouseMove);
+        el.removeEventListener("mouseout", handleMouseOut);
+        localStorage.setItem("player1", JSON.stringify(item));
+        el.disabled = true;
+        el.classList.toggle("active");
+        audioFx.src = "./assets/sound/ChooseFighter.mp3";
 
-      el.classList.toggle("active");
-      audio.src = "./assets/sound/FighterSelected.mp3";
+        let enemyImgSrc = null;
+        let currentCharacterDiv = null;
+        let currentEnemyFighter = null;
 
-      setTimeout(() => {
-        window.location.pathname = "arenas.html";
-      }, 3000);
+        let timerId = setInterval(() => {
+          let randomFigher = players[Math.ceil(Math.random() * (players.length - 1))];
+
+          currentCharacterDiv = document.querySelector(`.div${randomFigher.id}`);
+          currentEnemyFighter = randomFigher;
+
+          if (enemyImgSrc === null && currentCharacterDiv === null) {
+            currentCharacterDiv = document.querySelector(`.div${randomFigher.id}`);
+          }
+
+          currentCharacterDiv.classList.add("enemySelect");
+
+          enemyImgSrc = randomFigher.img;
+          const img = createElement("img");
+          img.src = enemyImgSrc;
+          enemy.appendChild(img);
+          audioFx.src = "./assets/sound/MouseOver.mp3";
+        }, 1000);
+
+        let timerId2 = setInterval(() => {
+          if (enemyImgSrc && currentCharacterDiv) {
+            currentCharacterDiv.classList.remove("enemySelect");
+            enemyImgSrc = null;
+            enemy.innerHTML = "";
+          }
+        }, 1300);
+
+        setTimeout(() => {
+          clearInterval(timerId);
+          clearInterval(timerId2);
+          localStorage.setItem("enemy", JSON.stringify(currentEnemyFighter));
+          audioFx.src = "./assets/sound/FighterSelected.mp3";
+          audioBg.src = " ";
+        }, 4800);
+
+        setTimeout(() => {
+          window.location.pathname = "arenas.html";
+        }, 7800);
+      }
     });
 
     img.src = item.avatar;
     img.alt = item.name;
 
     el.appendChild(img);
-    $parent.appendChild(el);
+    parent.appendChild(el);
   });
 }
 
