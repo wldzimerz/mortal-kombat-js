@@ -221,3 +221,8 @@ body {
   position: absolute;
   border: 14px solid #aa2121;
 }
+
+html {
+  visibility: visible;
+  opacity: 1;
+}
